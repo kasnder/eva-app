@@ -13,25 +13,25 @@
 defined('DIR') or die;
 
 // User logged in?
-$success = ($data == true);
-$type    = 'json';
+$success = ($data == true) ;
+$type = 'json';
 
 // Save id to db
 if ($success && $data['token']) {
-    // Check if regid already exists..
-    $eva    = Eva::getInstance();
-    $result = $eva->query("SELECT COUNT(*) FROM push WHERE regid = '".Common::getRequest('regid')."' AND userid = ".intval($data['id']));
-    $count  = mysql_result($result, 0);
+	// Check if regid already exists..
+	$eva = Eva::getInstance();
+	$result = $eva->query("SELECT COUNT(*) FROM push WHERE regid = '".Common::getRequest('regid')."' AND userid = ".intval($data['id']));
+	$count = mysqli_result($result, 0);
 
-    // Delete old regid -- could belong to a different user
-    if ($count > 0) {
-        $eva->query("DELETE FROM push WHERE regid = '".Common::getRequest('regid')."'");
-    }
+	// Delete old regid -- could belong to a different user
+	if ($count > 0) {
+		$eva->query("DELETE FROM push WHERE regid = '".Common::getRequest('regid')."'");
+	}
 
-    // Add new regid with the correct userid
-    $eva->query("INSERT INTO push (regid, userid) VALUES ('".Common::getRequest('regid')."', ".mysql_real_escape_string($data['id']).")");
+	// Add new regid with the correct userid
+	$eva->query("INSERT INTO push (regid, userid) VALUES ('".Common::getRequest('regid')."', ".mysqli_real_escape_string($data['id']).")");
 }
 
-$output            = [];
+$output = array();
 $output['success'] = $success;
 echo json_encode($output);

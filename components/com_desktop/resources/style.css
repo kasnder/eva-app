@@ -1,29 +1,29 @@
 * {
-    font-family: sans-serif;
-    padding: 0;
-    margin: 0;
+font-family: sans-serif;
+padding: 0;
+margin: 0;
 }
 
 p {
-    text-align: justify;
-    padding-bottom: 0.3em;
-    line-height: 1.5em;
+text-align: justify;
+padding-bottom: 0.3em;
+line-height: 1.5em;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    padding-bottom: 0.5em;
-    line-height: 1em;
+padding-bottom: 0.5em;
+line-height: 1em;
 }
 
 body {
-    padding: 1em;
+	padding: 1em;
 }
 
 input {
-    padding: 1px 0px;
+	padding: 1px 0px;
 }
 
 td {
-    padding-bottom: 0.2em;
-    padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	padding-top: 0.2em;
 }

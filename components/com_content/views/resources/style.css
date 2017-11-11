@@ -1,79 +1,79 @@
-@page {
-    size: auto; /* auto is the initial value */
-    margin: 0; /* this affects the margin in the printer settings */
+@page { 
+	size: auto; /* auto is the initial value */ 
+	margin: 0; /* this affects the margin in the printer settings */ 
 }
 
 * {
-    font-family: sans-serif;
-    padding: 0;
-    margin: 0;
-    font-size: 0.98em;
+	font-family: sans-serif;
+	padding: 0;
+	margin: 0;
+	font-size: 0.98em;
 }
 
 p {
-    text-align: justify;
-    padding-bottom: 0.3em;
-    line-height: 1.5em;
-    margin-left: 0.3em;
-    margin-right: 0.3em;
+	text-align: justify;
+	padding-bottom: 0.3em;
+	line-height: 1.5em;
+	margin-left:0.3em;
+	margin-right:0.3em;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    padding-bottom: 0.5em;
-    line-height: 1em;
+	padding-bottom: 0.5em;
+	line-height: 1em;
 }
 
 h1 {
-    font-size: 1.5em;
-    display: inline;
+	font-size: 1.5em;
+	display: inline;
 }
 
 h2 {
-    font-size: 1.2em;
-    float: right;
-    display: inline;
-    padding-bottom: 0.9em;
+	font-size: 1.2em;
+	float: right;
+	display: inline;
+	padding-bottom: 0.9em;
 }
 
 body {
-    padding: 1em;
+	padding: 1em;
 }
 
 input {
-    padding: 1px 0px;
+	padding: 1px 0px;
 }
 
 td {
-    padding: 0.2em;
+	padding: 0.2em;
 }
 
 table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 1em;
-    border-style: none;
+	border-collapse: collapse;
+	width: 100%;
+	margin-bottom: 1em;
+	border-style: none;
 }
 
 .emptyRow {
-    border-style: none;
-    padding: 0.2em;
+	border-style: none;
+	padding: 0.2em;
 }
 
 .container {
-    page-break-before: always;
+	page-break-before:always;
 }
 
 th, td {
-    width: 30%;
-    padding-left: 0.3em;
-    padding-right: 0.3em;
+	width: 30%;
+	padding-left: 0.3em;
+	padding-right: 0.3em;
 }
 
 .firstCell {
-    text-align: center;
-    width: 10% !important;
+	text-align: center;
+	width: 10% !important;
 }
 
 .grey {
-    background-color: #E8E8E8;
+	background-color: #E8E8E8;
 }

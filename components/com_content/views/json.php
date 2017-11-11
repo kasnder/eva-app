@@ -1,12 +1,12 @@
 <?php
 defined('DIR') or die;
-
+	
 $type = 'json';
 
 // Check size of data
-if ( ! $data['schedule']) {
-    echo '[]';
-    exit;
+if (!$data['schedule']) {
+  echo '[]';
+  exit;
 }
 
 // Generate JSON

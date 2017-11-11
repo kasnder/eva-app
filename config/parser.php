@@ -5,9 +5,8 @@ defined('DIR') or die;
 $temp_file = tempnam(realpath(sys_get_temp_dir()), 'eva-');
 file_put_contents($temp_file, $update); // TODO: parse directly
 
-function tocsv($array)
-{
-    return str_getcsv($array, '|');
+function tocsv ($array) {
+	return str_getcsv($array, '|');
 }
 
 $csv = array_map('tocsv', file($temp_file));
@@ -16,17 +15,16 @@ $csv = array_map('tocsv', file($temp_file));
 array_shift($csv);
 
 foreach ($csv as $entry) {
-    array_map('mysql_real_escape_string', $entry); // Security
-    $eva->query('INSERT INTO schedule (datum, stunde, klasse, fach, lehrerid, vertretung, raum, bemerkung) 
-		VALUES (STR_TO_DATE("'.$entry[0].'", "%d.%m.%Y"), "'.$entry[1].'", "'.$entry[3].'", "'.$entry[4].'", "'.$entry[5].'", "'.$entry[6].'", "'
-        .$entry[7].'", "'.$entry[8].'")');
+	array_map('mysqli_real_escape_string', $entry); // Security
+	$eva->query('INSERT INTO schedule (datum, stunde, klasse, fach, lehrerid, vertretung, raum, bemerkung) 
+		VALUES (STR_TO_DATE("'.$entry[0].'", "%d.%m.%Y"), "'.$entry[1].'", "'.$entry[3].'", "'.$entry[4].'", "'.$entry[5].'", "'.$entry[6].'", "'.$entry[7].'", "'.$entry[8].'")');
 }
 
 /* Process loaded data.. */
 /* Process notes */
 // Move imported notes from schedule table into notes table
 $eva->query('INSERT INTO notes (note, date, type)
-								SELECT bemerkung, datum, `stunde` - 100 AS type FROM `schedule` WHERE stunde >= 100;');
+								SELECT bemerkung, datum, `stunde` - 100 as type FROM `schedule` WHERE stunde >= 100;');
 $eva->query('DELETE FROM schedule WHERE stunde >= 100;');
 
 // Beautify result
@@ -51,28 +49,26 @@ $eva->query('DELETE FROM notes WHERE type = 1;');
 
 /* Process additional comments */
 $result = $eva->query('SELECT * FROM notes WHERE type = 0;');
-$notes  = [];
+$notes   = array();
 
-while ($comment = mysql_fetch_assoc($result)) {
-    // Remember date
-    $date = $comment['date'];
+while($comment = mysql_fetch_assoc($result)) {
+	// Remember date
+	$date     = $comment['date'];
 
-    // Explode the note string. Delimter is
-    $comments = explode("\n", $comment['note']);
+	// Explode the note string. Delimter is
+	$comments = explode("\n", $comment['note']);
 
-    // Process all stored comments
-    foreach ($comments as &$entry) {
-        $notes[] = [
-            'note' => $entry,
-            'date' => $date,
-        ];
-    }
+	// Process all stored comments
+	foreach($comments as &$entry){
+		$notes[] = array('note' => $entry,
+				'date'    => $date );
+	}
 }
 
 // Readd all notes
 $eva->query('DELETE FROM notes WHERE type = 0;');
-foreach ($notes as &$entry) {
-    $eva->query('INSERT INTO notes (note, date, type)
+foreach($notes as &$entry){
+	$eva->query('INSERT INTO notes (note, date, type)
 									VALUES("'.mysql_real_escape_string($entry['note']).'",
 											"'.mysql_real_escape_string($entry['date']).'",
 											0);');
@@ -89,4 +85,4 @@ $eva->query('UPDATE schedule SET klassePatch = "Q1" WHERE klasse = "11";');
 $eva->query('UPDATE schedule SET klassePatch = "Q2" WHERE klasse = "12";');
 
 // Beautify EVA entires
-$eva->query('UPDATE schedule SET raum = NULL WHERE bemerkung = "EVA";');
+$eva->query('UPDATE schedule SET raum = null WHERE bemerkung = "EVA";');

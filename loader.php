@@ -1,9 +1,9 @@
 <?php
 /**
  * Loader
- *
+ * 
  * The loading script for the whole framework. Includes all libraries, components and views.
- *
+ * 
  * - Libraries are in the <i>libs</i> directory and provide important funtions for all other parts of the application.
  * - Components name the part of the application where the data for the output is generated
  * - views style the output. There can be many ways the same data has to be processed for the user.
@@ -36,9 +36,9 @@ $view      = Common::getRequest('view');
 // Load the component
 $componentDir = DIR.'/components/com_'.$component.'/';
 
-if ( ! is_dir($componentDir)) {
-    $component    = Config::DEFAULT_COMPONENT;
-    $componentDir = DIR.'/components/com_'.$component.'/';
+if (!is_dir($componentDir)) {
+	$component = Config::DEFAULT_COMPONENT;
+	$componentDir = DIR.'/components/com_'.$component.'/';
 }
 
 // Test upload
@@ -63,7 +63,7 @@ Common::logUser(Eva::$db);*/
 /*
  * 3. Server Hygiene: Clean up the server (optimise tables, remove old tokens, etc.)
 */
-require(DIR.'/cron.php');
+require(DIR.'/cleanup.php');
 
 /*
  * 4. Finally render the results by applying the view.

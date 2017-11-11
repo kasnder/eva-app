@@ -1,3 +1,4 @@
 config/base.php
 .idea
 logs
+pma_*/

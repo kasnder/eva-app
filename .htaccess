@@ -4,24 +4,32 @@ Header add Access-Control-Allow-Origin "*"
 Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type"
 Header add Access-Control-Allow-Methods "PUT, GET, POST, DELETE, OPTIONS"
 
-Satisfy Any
-Order Deny,Allow
-Allow from all
+#Satisfy Any
+#Order Deny,Allow
+#Allow from all
 
 RewriteEngine on
 
-RewriteCond %{HTTP_HOST} ^(www.)?(app.otto-pankok-schule.de|ops-app.de)$
+RewriteCond %{HTTP_HOST} ^(www.)?(dev.ops-app.de)$
 RewriteCond %{REQUEST_URI} !^/components/com_app/views/touch/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /components/com_app/views/touch/$1
-RewriteCond %{HTTP_HOST} ^(www.)?(app.otto-pankok-schule.de|ops-app.de)$
+RewriteCond %{HTTP_HOST} ^(www.)?(dev.ops-app.de)$
 RewriteRule ^(/)?$ index.php [L]
 
 RewriteCond %{HTTP_HOST} ^(www.)?ssl-id.de$
-RewriteCond %{REQUEST_URI} !^/ops-app.de/components/com_app/views/touch/
+RewriteCond %{REQUEST_URI} !^/dev.ops-app.de/components/com_app/views/touch/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /ops-app.de/components/com_app/views/touch/$1
+RewriteRule ^(.*)$ /dev.ops-app.de/components/com_app/views/touch/$1
 RewriteCond %{HTTP_HOST} ^(www.)?ssl-id.de$
-RewriteRule ^(/)?$ /ops-app.de/index.php [L]
+RewriteRule ^(/)?$ /dev.ops-app.de/index.php [L]
+
+RewriteCond %{HTTP_HOST} ^(www.)?otto-pankok-schule.de$
+RewriteCond %{REQUEST_URI} !^/app_dev/components/com_app/views/touch/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /app_dev/components/com_app/views/touch/$1
+RewriteCond %{HTTP_HOST} ^(www.)?otto-pankok-schule.de$
+RewriteRule ^(/)?$ /app_dev/index.php [L]

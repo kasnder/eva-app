@@ -1,6 +1,6 @@
 <?php
 defined('DIR') or die;
-
+	
 $type = 'json';
 
 // Generate and output JSON

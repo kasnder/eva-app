@@ -1,6 +1,7 @@
 <?php
 defined('DIR') or die;
 
+
 /**
  * Settings
  *
@@ -14,169 +15,143 @@ defined('DIR') or die;
  * @todo       Use the PHP Template Tags
  */
 
+
+//$database 	 = Database::getInstance();
+//$db_ 		 = $database->connect($host, $user, $pwd, $dbName);
 $environment = Environment::getInstance();
-$eva         = Eva::getInstance();
-$admin       = $_SESSION;        // store the admin user array
-$body        = '';                // store html to show instead of the list of users etc.
+$eva		 = Eva::getInstance();
+$admin       = $_SESSION;		// store the admin user array
+$body 		 = '';	 			// store html to show instead of the list of users etc.
 
 // Set up $baseUrl (get the right protocol && host)
 $baseUrl = Common::getUrl('/index.php?component=desktop&view=manage', true);
 
 // Is there something to do?
 $action = Common::getRequest('action');
-
 switch ($action) {
-    case 'resetUser':
-        // Get user to reset
-        $id = Common::getRequest('id');
-        if ( ! is_numeric($id)) {
-            break;
-        }
+	
+	case 'resetUser':
+		// Get user to reset
+		$id = Common::getRequest('id');
+		if (!is_numeric($id)) break;
 
-        // Reset form and teacherTag
-        $result = $eva->query('UPDATE users SET form = NULL, teacherTag = NULL WHERE accessLevel < 4 AND id = '.mysql_real_escape_string($id));
-        if ( ! $result) {
-            Common::redirect($baseUrl.'&success=false', false);
-        }
+		// Reset form and teacherTag
+		$result = $eva->query('UPDATE users SET form = null, teacherTag = null WHERE accessLevel < 4 AND id = '.mysqli_real_escape_string(Eva::$db, $id));
+		if (!$result) Common::redirect($baseUrl.'&success=false', false);
 
-        // Return to main page
-        Common::redirect($baseUrl.'&success=true', false);
-    case 'resetPwd':
-        // Get id of user to reset
-        $id = Common::getRequest('id');
-        if ( ! is_numeric($id)) {
-            break;
-        }
+		// Return to main page
+		Common::redirect($baseUrl.'&success=true', false);
+	case 'resetPwd':
+		// Get id of user to reset
+		$id = Common::getRequest('id');
+		if (!is_numeric($id)) break;
 
-        // Get username
-        $result = $eva->query('SELECT username FROM users WHERE accessLevel < 4 AND id = '.mysql_real_escape_string($id));
-        if ( ! $result || mysql_num_rows($result) != 1) {
-            Common::redirect($baseUrl.'&success=false', false);
-        }
-        $username = $environment::getField($result);
+		// Get username
+		$result = $eva->query('SELECT username FROM users WHERE accessLevel <= 4 AND id = '.mysqli_real_escape_string(Eva::$db, $id));
+		if (!$result || mysqli_num_rows($result) != 1) Common::redirect($baseUrl.'&success=false', false);
+		$username = $environment::getField($result);
 
-        // Get and sync user account
-        $user = $environment->getUser($username);
-        if ( ! $user) {
-            Common::redirect($baseUrl.'&success=false', false);
-        }
+		// Get and sync user account
+		$user = $environment->getUser($username);
 
-        // Update pass with Config::DEFAULT_PASS
-        if ( ! $environment->updatePass($user, Config::DEFAULT_PASS, 1)) {
-            Common::redirect($baseUrl.'&success=false', false);
-        }
+		if (!$user) {
+			Common::redirect($baseUrl.'&success=false', false); 
+		}
 
-        // Let all current tokens expire
-        $eva->query('UPDATE tokens SET expired = 1 WHERE userid = '.mysql_real_escape_string($id));
+		// Update pass with Config::DEFAULT_PASS
+		if (!$environment->updatePass($user, Config::DEFAULT_PASS, 1)) Common::redirect($baseUrl.'&success=false', false);
 
-        // Return to main page
-        Common::redirect($baseUrl.'&success=true', false);
-    case 'resetAll':
-        // Truncate all tables except logs
-        // Get all tables
-        $sql    = "SHOW TABLES FROM ".Config::EVA_NAME;
-        $result = $eva->query($sql);
+		// Let all current tokens expire
+		$eva->query('UPDATE tokens SET expired = 1 WHERE userid = '.mysqli_real_escape_string(Eva::$db, $id));
 
-        if ( ! $result) {
-            Common::redirect($baseUrl.'&success=false', false);
-        }
+		// Return to main page
+		Common::redirect($baseUrl.'&success=true', false);
+	case 'resetAll':
+		// Truncate all tables except logs
+		// Get all tables
+		$sql = "SHOW TABLES FROM ".Config::EVA_NAME;
+		$result = $eva->query($sql);
 
-        // Finally truncate the tables except logs and users
-        while ($row = mysql_fetch_row($result)) {
-            $table = $row[0];
-            if ($table != 'logs' && $table != 'users') {
-                $eva->query("TRUNCATE TABLE $table");
-            }
-        }
+		if (!$result) Common::redirect($baseUrl.'&success=false', false);
 
-        // Delete all users except admins
-        $eva->query("DELETE FROM users WHERE accessLevel < 4");
+		// Finally truncate the tables except logs and users
+		while ($row = mysqli_fetch_row($result)) {
+			$table = $row[0];
+			if ($table != 'logs' && $table != 'users') $eva->query("TRUNCATE TABLE $table");
+		}
 
-        // Return to main page
-        Common::redirect($baseUrl.'&success=true', false);
-    case 'add': // Add users
-        // Get user
-        $lastname    = Common::getRequest('lastname');
-        $firstname   = Common::getRequest('firstname');
-        $accessLevel = Common::getRequest('accessLevel');
+		// Delete all users except admins
+		$eva->query("DELETE FROM users WHERE accessLevel < 4");
 
-        // Check credentials --> add user
-        if ($lastname == ''
-            || $firstname == ''
-            || $accessLevel == ''
-            || ! $environment->createUser($lastname, $firstname, $accessLevel)
-        ) {
-            Common::redirect($baseUrl.'&success=false', false);
-        }
+		// Return to main page
+		Common::redirect($baseUrl.'&success=true', false);
+	case 'add': // Add users
+		// Get user
+		$lastname    = Common::getRequest('lastname');
+		$firstname   = Common::getRequest('firstname');
+		$accessLevel = intval(Common::getRequest('accessLevel'));
 
-        // Return to main page
-        Common::redirect($baseUrl.'&success=true', false);
-    case 'remove': // Remove user from app db
-        // Get user to reset
-        $id = Common::getRequest('id');
-        if ( ! is_numeric($id)) {
-            break;
-        }
+		// Check credentials --> add user
+		if ($lastname == ''
+				|| $firstname == ''
+				|| $accessLevel < 0 || $accessLevel > 4
+				|| !$environment->createUser($lastname, $firstname, $accessLevel)) {
+			Common::redirect($baseUrl.'&success=false', false);
+		}
 
-        // Reset form and teacherTag
-        $result = $eva->query('DELETE FROM users WHERE accessLevel < 4 AND id = '.mysql_real_escape_string($id));
-        if ( ! $result) {
-            Common::redirect($baseUrl.'&success=false', false);
-        }
+		// Return to main page
+		Common::redirect($baseUrl.'&success=true', false);
+	case 'remove': // Remove user from app db
+		// Get user to reset
+		$id = Common::getRequest('id');
+		if (!is_numeric($id)) break;
 
-        // Return to main page
-        Common::redirect($baseUrl.'&success=true', false);
-    case 'edit': // Edit user in app db
-        // Get user to reset
-        $id = Common::getRequest('id');
-        if ( ! is_numeric($id)) {
-            break;
-        }
+		// Reset form and teacherTag
+		$result = $eva->query('DELETE FROM users WHERE accessLevel < 4 AND id = '.mysqli_real_escape_string(Eva::$db, $id));
+		if (!$result) Common::redirect($baseUrl.'&success=false', false);
 
-        // Get username
-        $result = $eva->query('SELECT username FROM users WHERE accessLevel < 4 AND id = '.mysql_real_escape_string($id));
-        if ( ! $result || mysql_num_rows($result) != 1) {
-            Common::redirect($baseUrl.'&success=false', false);
-        }
-        $username = $environment::getField($result);
+		// Return to main page
+		Common::redirect($baseUrl.'&success=true', false);
+	case 'edit': // Edit user in app db
+		// Get user to reset
+		$id = Common::getRequest('id');
+		if (!is_numeric($id)) break;
 
-        // Get and sync user account
-        $user = $environment->getUser($username);
-        if ( ! $user) {
-            Common::redirect($baseUrl.'&success=false', false);
-        }
+		// Get username
+		$result = $eva->query('SELECT username FROM users WHERE accessLevel < 4 AND id = '.mysqli_real_escape_string(Eva::$db, $id));
+		if (!$result || mysqli_num_rows($result) != 1) Common::redirect($baseUrl.'&success=false', false);
+		$username = $environment::getField($result);
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $lastname    = Common::getRequest('lastname');
-            $firstname   = Common::getRequest('firstname');
-            $accessLevel = Common::getRequest('accessLevel');
+		// Get and sync user account
+		$user = $environment->getUser($username);
+		if (!$user) Common::redirect($baseUrl.'&success=false', false);
 
-            // Check credentials --> add user
-            if ($lastname == ''
-                || $firstname == ''
-                || intval($accessLevel) != $accessLevel
-                || $accessLevel < 0
-                || $accessLevel > 4
-            ) {
-                Common::redirect($baseUrl.'&success=false', false);
-            }
+		if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+			$lastname    = Common::getRequest('lastname');
+			$firstname   = Common::getRequest('firstname');
+			$accessLevel = Common::getRequest('accessLevel');
 
-            // Update user
-            $result = $eva->query('UPDATE users SET accessLevel = '.intval($accessLevel).',
-																		firstname = "'.mysql_real_escape_string($firstname).'",
-																		lastname = "'.mysql_real_escape_string($lastname).'"
-																	WHERE accessLevel < 4 AND id = '.mysql_real_escape_string($id));
-            if ( ! $result) {
-                Common::redirect($baseUrl.'&success=false', false);
-            }
+			// Check credentials --> add user
+			if ($lastname == ''
+					|| $firstname == ''
+					|| intval($accessLevel) != $accessLevel
+					|| $accessLevel < 0 || $accessLevel > 4) {
+				Common::redirect($baseUrl.'&success=false', false);
+			}
 
-            // Return to main page
-            Common::redirect($baseUrl.'&success=true', false);
-        }
+			// Update user
+			$result = $eva->query('UPDATE users SET accessLevel = '.intval($accessLevel).',
+																		firstname = "'.mysqli_real_escape_string(Eva::$db, $firstname).'",
+																		lastname = "'.mysqli_real_escape_string(Eva::$db, $lastname).'"
+																	WHERE accessLevel < 4 AND id = '.mysqli_real_escape_string(Eva::$db, $id));
+			if (!$result) Common::redirect($baseUrl.'&success=false', false);
 
-        // Output an editor form
-        $body
-            = '
+			// Return to main page
+			Common::redirect($baseUrl.'&success=true', false);
+		}
+
+		// Output an editor form
+		$body = '
 			<!-- Heading -->
 			<h3>Nutzereditor</h3>
 
@@ -245,112 +220,108 @@ switch ($action) {
 					<span class="glyphicon glyphicon-remove"></span> Einstellungen
 				</button>
 			</a>';
-        break;
+		break;
 }
 ?>
 <!DOCTYPE HTML>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title><?php Common::secureEcho(Config::TITLE_SHORT); ?>: Benutzerliste</title>
+	<head>
+			<meta charset="UTF-8">
+			<title><?php Common::secureEcho(Config::TITLE_SHORT);?>: Benutzerliste</title>
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+			<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
 
-    <!-- Favicon -->
-    <link rel="icon" href="resources/icons/favicon.png" type="image/png"/>
-</head>
-<body style="padding:1em;">
-<div class="page-header">
-    <h1>
-        <a href="<?php echo $baseUrl; ?>"><?php Common::secureEcho(Config::TITLE_SHORT); ?>: Benutzerliste</a>
-        <small>
-            Guten Tag, <?php Common::secureEcho($admin['firstname'].' '.$admin['lastname']); ?>!
-        </small>
-        <small>
-            <a class="pull-right" href="index.php?component=desktop&amp;view=logout"><i>Ausloggen</i></a>
-        </small>
-    </h1>
-</div>
-<?php
-$success = Common::getRequest('success');
-if ($success):?>
-    <div class="alert alert-success">Update erfolgreich!</div>
-<?php elseif ( ! empty($success)): ?>
-    <div class="alert alert-danger">Update fehlgeschlagen!</div>
-<?php endif; ?>
-<?php
-// Only output a list of options and a list of all users, if there has not already been a body generated
-if ($body != '') {
-    echo $body.'</body></html>';
-    exit;
-}
-?>
+				<!-- Favicon -->
+			 <link rel="icon" href="resources/icons/favicon.png" type="image/png" />
+		</head>
+		<body style="padding:1em;">
+			<div class="page-header">
+			<h1>
+				<a href="<?php echo $baseUrl; ?>"><?php Common::secureEcho(Config::TITLE_SHORT);?>: Benutzerliste</a>
+				<small>
+					Guten Tag, <?php Common::secureEcho($admin['firstname'].' '.$admin['lastname']); ?>!
+				</small>
+				<small>
+					<a class="pull-right" href="index.php?component=desktop&amp;view=logout"><i>Ausloggen</i></a>
+				</small>
+			</h1>
+		</div>
+		<?php
+		$success = Common::getRequest('success');
+		if ($success == 'true'):?>
+			<div class="alert alert-success">Update erfolgreich!</div>
+		<?php elseif (!empty($success)):?>
+			<div class="alert alert-danger">Update fehlgeschlagen!</div>
+		<?php endif;?>
+		<?php
+		// Only output a list of options and a list of all users, if there has not already been a body generated
+		if ($body != '') {
+			echo $body.'</body></html>';
+			exit;
+		}
+		?>
 
-<!-- Form to add new user -->
-<form action="<?php echo $baseUrl; ?>&action=add" method="post" style="margin-bottom: 20px;display:none;" class="form-inline" id="addForm">
-    <!-- Set firstname -->
-    <div class="form-group">
-        <input id="firstname" name="firstname" type="text" class="form-control" placeholder="Vorname">
-    </div>
+		<!-- Form to add new user -->
+		<form action="<?php echo $baseUrl;?>&action=add" method="post" style="margin-bottom: 20px;display:none;" class="form-inline" id="addForm">
+			<!-- Set firstname -->
+			<div class="form-group">
+				<input id="firstname" name="firstname" type="text" class="form-control" placeholder="Vorname">
+			</div>
 
-    <!-- Set lastname -->
-    <div class="form-group">
-        <input id="lastname" name="lastname" type="text" class="form-control" placeholder="Nachname">
-    </div>
+			<!-- Set lastname -->
+			<div class="form-group">
+				<input id="lastname" name="lastname" type="text" class="form-control" placeholder="Nachname">
+			</div>
 
-    <!-- Set accessLevel -->
-    <div class="form-group">
-        <select class="form-control" id="accessLevel" name="accessLevel">
-            <option value="0">0 - Schüler(in)</option>
-            <option value="1">1 - Lehrer(in)</option>
-            <option value="2">2 - Erweitert(in)</option>
-            <option value="3">3 - Editor(in)</option>
-            <option value="4">4 - Administrator(in)</option>
-        </select>
-    </div>
+			<!-- Set accessLevel -->
+			<div class="form-group">
+				<select class="form-control" id="accessLevel" name="accessLevel">
+					<option value="0">0 - Schüler(in)</option>
+					<option value="1">1 - Lehrer(in)</option>
+					<option value="2">2 - Erweitert(in)</option>
+					<option value="3">3 - Editor(in)</option>
+					<option value="4">4 - Administrator(in)</option>
+				</select>
+			</div>
 
-    <!-- Submit -->
-    <div class="form-group">
-        <button type="submit" class="btn btn-default">Erstellen</button>
-    </div>
-</form>
+			<!-- Submit -->
+			<div class="form-group">
+				<button type="submit" class="btn btn-default">Erstellen</button>
+			</div>
+		</form>
 
-<!-- System stats -->
-<ul class="list-group">
-    <li class="list-group-item"><b>Statistiken</b></li>
-    <li class="list-group-item">Benutzeranzahl<span class="badge"><?php echo mysql_result($eva->query('SELECT COUNT(*) FROM users'), 0); ?></span>
-    </li>
-    <li class="list-group-item">Letztes Planupdate<span class="badge"><?php Common::secureEcho($eva->getSetting('last_update')); ?></span></li>
-</ul>
+		<!-- System stats -->
+		
+	
 
-<!-- List of actions -->
-<ul class="list-group">
-    <li class="list-group-item"><b>Aktionen</b></li>
-    <li class="list-group-item"><a onClick="document.getElementById('addForm').style.display = 'block';" href="javascript:void(0)">Benutzer
-            hinzufügen</a></li>
-    <li class="list-group-item"><a href="<?php echo $baseUrl; ?>&action=resetAll"
-                                   onclick="return confirm('Achtung! Diese Entscheidung ist ENDGÜLTIG!')">Vertretungsplansystem komplett
-            zurücksetzen</a><span class="alert-danger badge">ACHTUNG</span></li>
-    <li class="list-group-item"><a
-                href="<?php Common::secureEcho(Common::getUrl('/index.php?component=content&view=print&token='.urlencode($admin['token']),
-                    true)); ?>">Zum Druck</a></li>
-    <li class="list-group-item"><a href="<?php Common::secureEcho(Common::getUrl('/index.php?view=touch', true)); ?>">Zur App</a></li>
-    <li class="list-group-item"><a href="<?php Common::secureEcho(Common::getUrl('/index.php?component=desktop&view=schedule', true)); ?>">Zum
-            Plan</a></li>
-</ul>
+		<ul class="list-group">
+			<li class="list-group-item"><b>Statistiken</b></li>
+			<li class="list-group-item">Benutzeranzahl<span class="badge"><?php echo Database::result($eva->query('SELECT COUNT(*) FROM users'), 0);?></span></li>
+			<li class="list-group-item">Letztes Planupdate<span class="badge"><?php Common::secureEcho($eva->getSetting('last_update'));?></span></li>
+		</ul>
 
-<!-- Add a list of all users except admins (for security reasons) -->
-<h3>Nutzerliste</h3>
-<?php
+		<!-- List of actions -->
+		<ul class="list-group">
+			<li class="list-group-item"><b>Aktionen</b></li>
+			<li class="list-group-item"><a onClick="document.getElementById('addForm').style.display = 'block';" href="javascript:void(0)">Benutzer hinzufügen</a></li>
+			<li class="list-group-item"><a href="<?php echo $baseUrl;?>&action=resetAll" onclick="return confirm('Achtung! Diese Entscheidung ist ENDGÜLTIG!')">Alle Daten und Einstellungen löschen</a><span class="alert-danger badge">ACHTUNG</span></li>
+			<li class="list-group-item"><a href="<?php Common::secureEcho(Common::getUrl('/index.php?component=content&view=print&token='.urlencode($admin['token']), true));?>">Zum Druck</a></li>
+			<li class="list-group-item"><a href="<?php Common::secureEcho(Common::getUrl('/index.php?view=touch', true));?>">Zur App</a></li>
+			<li class="list-group-item"><a href="<?php Common::secureEcho(Common::getUrl('/index.php?component=desktop&view=schedule', true));?>">Zum Plan</a></li>
+		</ul>
 
-// Get all users
-$users = $eva->query('SELECT * FROM users WHERE 1 ORDER BY lastname, firstname');
+		<!-- Add a list of all users except admins (for security reasons) -->
+		<h3>Nutzerliste</h3>
+		<?php
 
-// Output all users
-if ($users && mysql_num_rows($users) > 0) {
-    // Output users in an unordered list
-    echo '<table class="table table-striped">
+		// Get all users
+		$users = $eva->query('SELECT * FROM users WHERE 1 ORDER BY lastname, firstname');
+
+		// Output all users
+		if ($users && mysqli_num_rows($users) > 0) {
+			// Output users in an unordered list
+			echo '<table class="table table-striped">
 					<thead>
 						<tr>
 							<th>#</th>
@@ -361,9 +332,9 @@ if ($users && mysql_num_rows($users) > 0) {
 						</tr>
 					</thead>
 					<tbody>';
-    while ($user = mysql_fetch_assoc($users)) {
-        if ($user['accessLevel'] == 4) {
-            echo '<tr>
+			while($user = mysqli_fetch_assoc($users)) {
+				if ($user['accessLevel'] == 4) {
+					echo '<tr>
 							<td>
 								<span class="badge">'.intval($user['id']).'</span>
 							</td>
@@ -375,8 +346,8 @@ if ($users && mysql_num_rows($users) > 0) {
 							<td style="text-align: center;"></td>
 							<td style="text-align: center;"></td>
 						</tr>';
-        } else {
-            echo '<tr>
+				} else {
+					echo '<tr>
 							<td>
 								<span class="badge">'.intval($user['id']).'</span>
 							</td>
@@ -402,19 +373,19 @@ if ($users && mysql_num_rows($users) > 0) {
 								</a>
 							</td>
 						</tr>';
-        }
-        flush();
-    }
+				}
+				flush();
+			}
 
-    echo '</tbody></table>';
-} else {
-    echo '<p>Keine Freunde.. :(</p>';
-}
-?>
-<!-- Footer -->
-<ul class="pager">
-    <li><a href="http://<?php Common::secureEcho(Config::HTTP_HOST); ?>/index.php?view=touch">Touch-Version</a></li>
-    <li><a href="<?php Common::secureEcho(Config::IMPRINT_URL); ?>">Impressum</a></li>
-</ul>
-</body>
+			echo '</tbody></table>';
+		} else {
+			echo '<p>Keine Freunde.. :(</p>';
+		}
+		?>
+		<!-- Footer -->
+		<ul class="pager">
+			<li><a href="http://<?php Common::secureEcho(Config::HTTP_HOST);?>/index.php?view=touch">Touch-Version</a></li>
+				<li><a href="<?php Common::secureEcho(Config::IMPRINT_URL);?>">Impressum</a></li>
+		</ul>
+		</body>
 </html>

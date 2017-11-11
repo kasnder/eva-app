@@ -14,7 +14,7 @@ defined('DIR') or die;
 
 // Set up some required vars..
 $type = 'html';
-$eva  = Eva::getInstance();
+$eva = Eva::getInstance();
 
 // Cleaning up after you, my dear!
 $eva->query('DELETE FROM schedule WHERE hinzufuegen = 0 AND loeschen = 0;');
@@ -22,9 +22,7 @@ $eva->query('TRUNCATE TABLE notes;');
 
 // Import the submitted data
 $environment = Environment::getInstance();
-if ( ! $environment->importSchedule($data)) {
-    exit;
-}
+if (!$environment->importSchedule($data)) exit;
 
 /* SUCCESS */
 $eva->afterUpdate();
