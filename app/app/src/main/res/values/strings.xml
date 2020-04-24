@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<resources>
+
+    <!-- General app string -->
+    <string name="app_name">Otto-Pankok-Schule</string>
+    <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren.</string>
+
+    <!-- Shared Preferences -->
+    <string name="preference_token" translatable="false">token</string>
+    <string name="preference_username" translatable="false">username</string>
+    <string name="preference_first_start" translatable="false">first_start</string>
+    <string name="preference_registration_id" translatable="false">registrationId</string>
+    <string name="preference_app_version" translatable="false">appVersion</string>
+
+    <!-- Error messages -->
+    <string name="error_login_failed">Login failed.</string>
+    <string name="error_needs_setup">Setup your account. Open ops-app.de in your browser and log in.</string>
+    <string name="error_schedule_loading_failed">Loading the schedule failed.</string>
+    <string name="error_user_loading_failed">Singing in failed.</string>
+
+    <!-- Home Activity -->
+    <string name="no_items">No changes.</string>
+    <string name="menu_reload">Reload</string>
+    <string name="menu_sign_out">Sign out</string>
+    <string name="menu_settings">Settings</string>
+    <string name="info_text">
+<![CDATA[
+      <p>Stand des Plans: %1$s</p>
+      %2$s
+      ]]>
+    </string>
+
+    <!-- ListView Item -->
+    <string name="stunde_placeholder" translatable="false">##.</string>
+    <string name="line1_placeholder" translatable="false">Date</string>
+    <string name="line2_placeholder" translatable="false">Entry</string>
+
+    <!-- Login Activity -->
+    <string name="activity_login_title">Moodle Login</string>
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+
+    <!-- Setup Activity -->
+    <string name="activity_setup_title">Setup account</string>
+    <string name="menu_cancel">Cancel</string>
+    <string name="setup_intro">Hello %1$s %2$s, nice to see you! To be able to generate your personal substitution schedule you have to setup your account once.</string>
+    <string name="prompt_tag">Teacher Tag</string>
+    <string name="prompt_form">Form</string>
+    <string name="prompt_password_old">Old password</string>
+    <string name="prompt_password_new">New password</string>
+    <string name="prompt_password_repetition">Repeat password</string>
+    <string name="setup_instructions">Attention! You can do this setup only once.</string>
+    <string name="action_complete">Complete</string>
+    <string name="error_all_fields">Please fill all fields.</string>
+    <string name="error_password_match">Password do not match.</string>
+    <string name="error_setup_failed">Setup failed.</string>
+
+    <!-- Settings Activity -->
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Notifications setting -->
+    <string name="pref_notifications_title">Enable push notifications</string>
+    <string name="pref_notifications_description">Receive instant notifications about substitution schedule changes</string>
+
+    <!-- HomeTabbedActivity/HomeDrawerActivity -->
+    <string name="title_schedule">Schedule</string>
+    <string name="title_news">News</string>
+
+    <!-- NewsDetails -->
+    <string name="news_details_browser">Browser</string>
+
+    <!-- Dialog strings -->
+    <string name="ok">OK</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="retry">Retry?</string>
+</resources>

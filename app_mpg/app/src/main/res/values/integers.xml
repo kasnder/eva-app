@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<resources>
+    <item type="integer" name="loginImeActionId" format="integer">100</item>
+    <item type="integer" name="setupImeActionId" format="integer">101</item>
+</resources>

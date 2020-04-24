@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<resources>
+    <!-- AppCompat does not support PreferenceActivities -->
+    <style name="SettingsTheme" parent="android:Theme.Material.Light">
+        <!-- Material Design settings.. -->
+        <!--   your app branding color for the app bar -->
+        <item name="android:colorPrimary">@color/primary</item>
+        <!--   darker variant for the status bar and contextual app bars -->
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">@color/accent</item>
+
+        <!-- Text Color -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+</resources>

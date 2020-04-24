@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="downloadUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://ssl-id.de/ops-app.de/?component=content&amp;template=json&amp;token=</Value>
+    </Setting>
+    <Setting Name="uploadJsonUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://ssl-id.de/ops-app.de/?component=admin&amp;template=json&amp;token=</Value>
+    </Setting>
+    <Setting Name="loginUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://ssl-id.de/ops-app.de/?component=auth&amp;template=login&amp;</Value>
+    </Setting>
+    <Setting Name="printUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://ssl-id.de/ops-app.de/?component=content&amp;template=print&amp;forcePagebreak=true&amp;token=</Value>
+    </Setting>
+    <Setting Name="uploadTurboUrl" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://ssl-id.de/ops-app.de/?component=admin&amp;template=turbo&amp;token=</Value>
+    </Setting>
+    <Setting Name="syncDir" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="username" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="syncActive" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="disableBalloons" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="cryptoKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="sha1" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<resources>
+    <color name="primary">#00BCD4</color>
+    <color name="primary_dark">#0097A7</color>
+    <color name="accent">#2196F3</color>
+    <color name="accent_dark">#1E88E5</color>
+    <color name="accent_darker">#1976D2</color>
+    <color name="text_primary">#D9FFFFFF</color>
+    <color name="text_secondary">#D9000000</color>
+</resources>

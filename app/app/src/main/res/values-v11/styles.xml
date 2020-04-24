@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<resources>
+    <!-- AppCompat does not support PreferenceActivities -->
+    <style name="SettingsTheme" parent="android:Theme.Holo.Light"/>
+</resources>

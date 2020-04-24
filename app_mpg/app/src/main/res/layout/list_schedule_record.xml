@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/record_date"
+        android:gravity="center_vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:height="50dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:text="@string/line1_placeholder"
+        android:textColor="@color/text_secondary"
+        android:textSize="16sp"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp">
+
+        <LinearLayout
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/shape"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/record_stunde"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/stunde_placeholder"
+                android:textColor="#ffffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/record_entry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="16sp"
+            android:text="@string/line2_placeholder"/>
+    </LinearLayout>
+</LinearLayout>

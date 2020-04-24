@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<resources>
+    <!-- List Entry -->
+    <dimen name="list_entry_margin_right">7dp</dimen>
+    <dimen name="list_entry_margin_left">10dp</dimen>
+    <dimen name="list_entry_margin_top">2dp</dimen>
+    <dimen name="list_entry_margin_bottom">10dp</dimen>
+</resources>

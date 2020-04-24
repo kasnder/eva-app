@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<resources>
+    <!-- General app string -->
+
+    <!-- Error messages -->
+    <string name="error_schedule_loading_failed">Laden des Plans fehlgeschlagen.</string>
+
+    <!-- Home Activity -->
+    <string name="no_items">Keine anstehenden Änderungen.</string>
+    <string name="menu_reload">Aktualisieren</string>
+    <string name="menu_sign_out">Abmelden</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="info_text">
+      <![CDATA[
+      <p>Stand des Plans: %1$s</p>
+      %2$s
+      ]]></string>
+
+    <!-- Login Activity -->
+    <!-- Strings related to login -->
+    <string name="activity_login_title">IServ-Anmeldung</string>
+    <string name="prompt_username">Benutzername</string>
+    <string name="prompt_password">Passwort</string>
+    <string name="action_sign_in">Anmelden</string>
+    <string name="action_sign_in_short">Login</string>
+
+    <!-- Update Activity -->
+    <string name="activity_setup_title">Account Einrichtung</string>
+    <string name="menu_cancel">Abbrechen</string>
+    <string name="setup_intro">Hallo %1$s %2$s, schön, dich zu sehen! Um deinen persönlichen Vertretungsplan generieren zu können, musst du einmalig deinen Account einrichten.</string>
+
+    <string name="prompt_tag">Lehrerkürzel</string>
+    <string name="prompt_form">Klasse/Stufe (z.B. 5a, 11)</string>
+    <string name="prompt_password_old">Altes Passwort</string>
+    <string name="prompt_password_new">Neues Passwort</string>
+    <string name="prompt_password_repetition">Passwort wiederholen</string>
+    <string name="setup_instructions">Achtung! Eine erneute Änderung ist nur durch einen Administrator möglich.</string>
+    <string name="action_complete">Abschließen</string>
+
+    <string name="error_all_fields">Bitte alle Felder ausfüllen.</string>
+    <string name="error_password_match">Die neuen Passwörter stimmen nicht überein.</string>
+    <string name="error_setup_failed">Einrichtung fehlgeschlagen.</string>
+    <string name="error_user_loading_failed">Authentifizierung fehlgeschlagen.</string>
+
+    <!-- Settings Activity -->
+    <string name="title_activity_settings">Einstellungen</string>
+
+    <!-- Notifications setting -->
+    <string name="pref_notifications_title">Benachrichtigungen</string>
+    <string name="pref_notifications_description">Erhalte umgehend Nachricht von Vertretungsplanänderungen</string>
+
+    <string name="title_schedule">Vertretungen</string>
+    <string name="retry">Wiederholen</string>
+</resources>

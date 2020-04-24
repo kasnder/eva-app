@@ -1,0 +1,13 @@
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="checkbox_notifications"
+        android:summary="@string/pref_notifications_description"
+        android:title="@string/pref_notifications_title"/>
+
+</PreferenceScreen>

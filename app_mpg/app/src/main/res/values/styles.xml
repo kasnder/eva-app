@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) Konrad Kollnig 2015.
+  -->
+
+<resources>
+    <!-- AppCompat does not support PreferenceActivities -->
+    <!-- Gingerbread Style.. -->
+    <style name="SettingsTheme" parent="android:Theme.Light"/>
+
+    <!-- For Gingerbread compatibility -->
+    <style name="textAppearanceListItemSmall" parent="android:TextAppearance.Medium"/>
+</resources>
