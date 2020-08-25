@@ -11,9 +11,9 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-        applicationId "com.ops.app_dev"
+        applicationId "com.ops.app"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 30
         //versionCode 38
         versionName "6.0.0"
     }
@@ -38,7 +38,6 @@ dependencies {
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     implementation 'com.android.support:support-v4:25.3.1'
     implementation 'com.android.support:appcompat-v7:25.3.1'
-    implementation 'com.google.android.gms:play-services-gcm::15.0.0'
     implementation 'com.melnykov:floatingactionbutton:1.1.0'
 }
 

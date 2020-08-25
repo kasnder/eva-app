@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 import com.ops.app.R;
@@ -126,7 +127,11 @@ public class Common {
      * @param message The message to be displayed
      */
     public static void msgBox(final Activity destination, String message, final Boolean finishOnClick) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(destination);
+        AlertDialog.Builder builder;
+        if(Build.VERSION.SDK_INT >= 21)
+            builder = new AlertDialog.Builder(destination, android.R.style.Theme_Material_Light_Dialog_Alert);
+        else
+            builder = new AlertDialog.Builder(destination);
         builder.setMessage(message)
                 .setCancelable(false)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

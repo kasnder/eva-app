@@ -14,7 +14,6 @@ import android.content.pm.PackageInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,13 +28,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.melnykov.fab.FloatingActionButton;
 import com.ops.app.R;
 import com.ops.app.libs.Common;
-import com.ops.app.libs.Config;
 import com.ops.app.libs.Model;
 import com.ops.app.libs.Settings;
 import com.ops.app.stores.Schedule;
@@ -44,7 +39,6 @@ import com.ops.app.stores.User;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,10 +66,7 @@ public class ScheduleFragment extends Fragment {
 	 * Array Adapter that will hold our ArrayList and display the items on the ListView
 	 */
 	private ScheduleAdapter scheduleAdapter;
-	/* GCM Variables*/
-	private GoogleCloudMessaging gcm;
 	//private Context context;
-	private String regid;
 
 	public ScheduleFragment () {
 		// Required empty public constructor
@@ -417,16 +408,6 @@ public class ScheduleFragment extends Fragment {
 		Settings.set(getString(R.string.preference_token), token);
 		Settings.set(getString(R.string.preference_username), Common.user.getString("username"));
 
-		// Check device for Play Services APK. If check succeeds, do GCM registration.
-		if (checkPlayServices()) {
-			gcm = GoogleCloudMessaging.getInstance(getActivity());
-			regid = getRegistrationId(getActivity());
-
-			if (regid.isEmpty()) {
-				registerInBackground();
-			}
-		}
-
 		// First time here?
 		Boolean gimmeInformation = (Boolean) Common.user.get("gimmeInformation");
 		Boolean password2change = (Boolean) Common.user.get("password2change");
@@ -458,118 +439,6 @@ public class ScheduleFragment extends Fragment {
 
 		// Load schedule
 		Common.schedule.load(token);
-	}
-
-	/**
-	 * Check the device to make sure it has the Google Play Services APK. If
-	 * it doesn't, display a dialog that allows users to download the APK from
-	 * the Google Play Store or enable it in the device's system settings.
-	 */
-	private boolean checkPlayServices () {
-		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity());
-		if (resultCode != ConnectionResult.SUCCESS) {
-			if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-				GooglePlayServicesUtil.getErrorDialog(resultCode, getActivity(),
-						PLAY_SERVICES_RESOLUTION_REQUEST).show();
-			} else {
-				return true; // Device is not supported.
-			}
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * Gets the current registration ID for application on GCM service.
-	 * <p/>
-	 * If result is empty, the app needs to register.
-	 *
-	 * @return registration ID, or empty string if there is no existing
-	 * registration ID.
-	 */
-	private String getRegistrationId (Context context) {
-		String registrationId = Settings.get(getString(R.string.preference_registration_id), "");
-		if (registrationId.isEmpty()) {
-			return "";
-		}
-		// Check if app was updated; if so, it must clear the registration ID
-		// since the existing regID is not guaranteed to work with the new
-		// app version.
-		int registeredVersion = Settings.getInt(getString(R.string.preference_app_version), Integer.MIN_VALUE);
-		int currentVersion = getAppVersion(context);
-		if (registeredVersion != currentVersion) {
-			return "";
-		}
-		return registrationId;
-	}
-
-	/**
-	 * Registers the application with GhCM servers asynchronously.
-	 * <p/>
-	 * Stores the registration ID and app versionCode in the application's
-	 * shared preferences.
-	 */
-	private void registerInBackground () {
-		new AsyncTask<Void, Void, Boolean>() {
-			@Override
-			protected Boolean doInBackground (Void... params) {
-				try {
-					if (gcm == null) {
-						gcm = GoogleCloudMessaging.getInstance(getActivity());
-					}
-					regid = gcm.register(Config.SENDER_ID);
-
-					// Send Registration Id to Server
-					if (!sendRegistrationIdToBackend())
-						throw new IOException("Registering failed.");
-
-					// Persist the regID - no need to register again.
-					storeRegistrationId(getActivity(), regid);
-
-					return true;
-				} catch (IOException ex) {
-					// If there is an error, don't just keep trying to register.
-					// Require the user to click a button again, or perform
-					// exponential back-off.
-				}
-
-				return false;
-			}
-
-			@Override
-			protected void onPostExecute (Boolean success) {
-				// Do nothing once again..
-			}
-		}.execute(null, null, null);
-	}
-
-	/**
-	 * Stores the registration ID and app versionCode in the application's
-	 * {@code SharedPreferences}.
-	 *
-	 * @param context application's context.
-	 * @param regId   registration ID
-	 */
-	private void storeRegistrationId (Context context, String regId) {
-		int appVersion = getAppVersion(context);
-		Settings.set(getString(R.string.preference_registration_id), regId);
-		Settings.setInt(getString(R.string.preference_app_version), appVersion);
-	}
-
-	/**
-	 * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
-	 * or CCS to send messages to your app.
-	 */
-	private Boolean sendRegistrationIdToBackend () {
-		String[][] registerParams = {
-				{"component", "auth"},
-				{"view", "push"},
-				{"token", token},
-				{"regid", regid}
-		};
-		String registerUrl = Common.buildUrl(registerParams, Config.host, Config.jsonVersion);
-
-		return Common.downloadString(registerUrl) != null;
 	}
 
 	/**

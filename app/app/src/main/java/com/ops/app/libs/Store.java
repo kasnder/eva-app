@@ -198,10 +198,10 @@ public abstract class Store implements Serializable {
 
         // Download Json
         String jsonString = Common.downloadString(url);
+        if (jsonString == null) return false;
         if (BuildConfig.DEBUG) {
             Common.log(jsonString);
         }
-        if (jsonString == null) return false;
 
         // Try to detect error
         try {
